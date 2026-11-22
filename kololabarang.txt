@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelola Barang - Aplikasi Inventaris Barang Cloud</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --danger: #ef4444;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #0b1120;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+    }
+
+    .nav-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      margin-left: 1rem;
+      font-size: 0.95rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+    }
+
+    nav a.active,
+    nav a:hover {
+      background-color: var(--card);
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 960px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .box {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: #0f172a;
+      color: var(--text);
+    }
+
+    .btn {
+      background-color: var(--accent);
+      color: #082f49;
+      font-weight: 700;
+      padding: 0.65rem 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .search-input {
+      max-width: 320px;
+    }
+
+    .summary {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .summary strong {
+      color: var(--accent);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.7rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .aksi-btn {
+      padding: 0.3rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background-color: #0f172a;
+      color: var(--text);
+      cursor: pointer;
+      margin-right: 0.25rem;
+    }
+
+    .aksi-btn.hapus {
+      border-color: #7f1d1d;
+      color: #fca5a5;
+    }
+
+    .status-msg {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a class="brand" href="index.html">InventarisCloud</a>
+      <nav>
+        <a href="index.html">Beranda</a>
+        <a class="active" href="barang.html">Kelola Barang</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Pengelolaan Data Barang</h1>
+
+    <section class="box">
+      <form id="formBarang">
+        <div class="form-grid">
+          <div>
+            <label for="nama">Nama Barang *</label>
+            <input id="nama" type="text" placeholder="Contoh: Kabel HDMI" required />
+          </div>
+          <div>
+            <label for="kategori">Kategori *</label>
+            <select id="kategori" required>
+              <option value="Elektronik">Elektronik</option>
+              <option value="Perlengkapan Kuliah">Perlengkapan Kuliah</option>
+              <option value="Aksesoris">Aksesoris</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label for="jumlah">Jumlah Stok *</label>
+            <input id="jumlah" type="number" min="0" value="1" required />
+          </div>
+          <div>
+            <label for="lokasi">Lokasi / Keterangan</label>
+            <input id="lokasi" type="text" placeholder="Contoh: Rak Meja Belajar" />
+          </div>
+        </div>
+        <button class="btn" type="submit">+ Simpan Barang</button>
+        <div id="statusMsg" class="status-msg"></div>
+      </form>
+    </section>
+
+    <section class="box">
+      <div class="toolbar">
+        <input id="cariInput" class="search-input" type="text" placeholder="Cari nama atau kategori barang..." />
+        <div class="summary">
+          Total Item: <strong id="totalItem">0</strong> | Total Stok: <strong id="totalStok">0</strong>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Barang</th>
+              <th>Kategori</th>
+              <th>Lokasi</th>
+              <th>Jumlah</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabelBarangBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    UTS Komputasi Paralel pada Cloud Computing — Aplikasi Inventaris Barang
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "https://bqffaoqdwqinlonmuzyr.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_7GLcIpYrQYhLLHqQG-ytmA_Nljw7tFO";
+    const TABLE_ENDPOINT = `${SUPABASE_URL}/rest/v1/barang`;
+
+    const headers = {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    };
+
+    let daftarBarang = [];
+
+    function setStatus(teks, isError = false) {
+      const el = document.getElementById("statusMsg");
+      el.textContent = teks;
+      el.style.color = isError ? "#f87171" : "#4ade80";
+    }
+
+    async function ambilBarang() {
+      try {
+        const res = await fetch(`${TABLE_ENDPOINT}?select=*&order=id.asc`, { headers });
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(errText || `HTTP ${res.status}`);
+        }
+        daftarBarang = await res.json();
+        renderTabel();
+        setStatus("Terhubung ke database Supabase (tabel: barang).");
+      } catch (err) {
+        setStatus("Gagal memuat data dari Supabase. Cek RLS policy pada tabel 'barang'. Detail: " + err.message, true);
+      }
+    }
+
+    function renderTabel() {
+      const keyword = document.getElementById("cariInput").value.trim().toLowerCase();
+      const filtered = daftarBarang.filter((item) =>
+        String(item.nama || "").toLowerCase().includes(keyword) ||
+        String(item.kategori || "").toLowerCase().includes(keyword)
+      );
+
+      const tbody = document.getElementById("tabelBarangBody");
+      tbody.innerHTML = "";
+
+      filtered.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td><strong>${escapeHtml(item.nama)}</strong></td>
+          <td>${escapeHtml(item.kategori || "-")}</td>
+          <td>${escapeHtml(item.lokasi || "-")}</td>
+          <td>${Number(item.jumlah) || 0}</td>
+          <td>
+            <button class="aksi-btn" onclick="ubahStok(${item.id}, 1)">+1</button>
+            <button class="aksi-btn" onclick="ubahStok(${item.id}, -1)">-1</button>
+            <button class="aksi-btn hapus" onclick="hapusBarang(${item.id})">Hapus</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const totalItem = filtered.length;
+      const totalStok = filtered.reduce((sum, item) => sum + (Number(item.jumlah) || 0), 0);
+      document.getElementById("totalItem").textContent = totalItem;
+      document.getElementById("totalStok").textContent = totalStok;
+    }
+
+    document.getElementById("formBarang").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nama = document.getElementById("nama").value.trim();
+      const kategori = document.getElementById("kategori").value;
+      const jumlah = Math.max(0, parseInt(document.getElementById("jumlah").value, 10) || 0);
+      const lokasi = document.getElementById("lokasi").value.trim();
+
+      if (!nama) return;
+
+      try {
+        const res = await fetch(TABLE_ENDPOINT, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ nama, kategori, jumlah, lokasi })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        document.getElementById("formBarang").reset();
+        document.getElementById("jumlah").value = 1;
+        await ambilBarang();
+        setStatus("Barang berhasil disimpan ke Supabase.");
+      } catch (err) {
+        setStatus("Gagal menyimpan barang: " + err.message, true);
+      }
+    });
+
+    async function ubahStok(id, delta) {
+      const target = daftarBarang.find((x) => x.id === id);
+      if (!target) return;
+      const jumlahBaru = Math.max(0, (Number(target.jumlah) || 0) + delta);
+
+      try {
+        const res = await fetch(`${TABLE_ENDPOINT}?id=eq.${id}`, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ jumlah: jumlahBaru })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        await ambilBarang();
+      } catch (err) {
+        setStatus("Gagal mengubah stok: " + err.message, true);
+      }
+    }
+
+    async function hapusBarang(id) {
+      try {
+        const res = await fetch(`${TABLE_ENDPOINT}?id=eq.${id}`, {
+          method: "DELETE",
+          headers
+        });
+        if (!res.ok) throw new Error(await res.text());
+        await ambilBarang();
+      } catch (err) {
+        setStatus("Gagal menghapus barang: " + err.message, true);
+      }
+    }
+
+    function escapeHtml(text) {
+      return String(text ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    document.getElementById("cariInput").addEventListener("input", renderTabel);
+
+    ambilBarang();
+  </script>
+</body>
+</html>
